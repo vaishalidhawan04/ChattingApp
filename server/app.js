@@ -1,20 +1,16 @@
-const express = require('express');
-const app = express();
+const express=require('express')
+const app=express();
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
+
 
 require('./db/connection')
+const port=process.env.PORT || 8000;
 
-
-app.use(express.json());
-app.use(express.urlencoded({extended : true}));
-
-
-//This is the root route
-app.get('/', (req, res) => {
-    res.send('Welcome');
+app.get('/',(req,res)=>{
+    res.send('welcome');
 })
 
-
-const port = process.env.PORT || 8000;
-app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+app.listen(port,()=>{
+    console.log('listening on port'+port);
 })
