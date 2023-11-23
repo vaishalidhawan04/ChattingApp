@@ -16,12 +16,27 @@ const Form = ({
 
     console.log('data :>> ', data);
     const navigate = useNavigate();
+
+    const handleSubmit = async(e) => {
+        console.log('data: >> ',data);
+        e.preventDefault();
+        const res =  await fetch(`http://localhost:8000/api/${isSignInPage ? 'login' : 'register'}`,{
+            method : 'POST',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(data)
+        })
+        const resData = await res.json()
+        console.log('data :>> ', resData);
+    }
+
   return (
     <div className='bg-light h-screen flex items-center justify-center'>
         <div className='bg-white w-[500px] h-[600px] shadow-lg rounded-lg flex flex-col justify-center items-center'> 
             <div className='text-3xl font-bold'>Welcome {isSignInPage && 'Back'}</div>
             <div className='text-xl font-light mb-14'>{isSignInPage ? 'Sign in to explore' : 'Sign up now to get started'}</div>
-            <form className='flex flex-col items-center w-full' onSubmit={() => console.log('Submitted')}>
+            <form className='flex flex-col items-center w-full' onSubmit={(e) => handleSubmit(e)}>
                 {!isSignInPage && <Input label='Full name' name='name' placeholder='Enter your full name' className='mb-6 w-[50%]' value={data.fullName} onChange={(e) => setdata({ ...data, fullName: e.target.value })}/>}
                 <Input label='Email Address' name='email' placeholder='Enter your email address' className='mb-6 w-[50%]' value={data.email} onChange={(e) => setdata({ ...data, email: e.target.value })}/>
                 <Input label='Password' type='password' name='password' placeholder='Enter your password' className='mb-14 w-[50%]' value={data.password} onChange={(e) => setdata({ ...data, password: e.target.value })}/>

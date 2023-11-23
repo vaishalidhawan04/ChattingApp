@@ -1,10 +1,13 @@
 const express=require('express');
 const bcryptjs=require('bcryptjs');
 const jwt=require('jsonwebtoken');
+const cors = require('cors');
+
 
 const app=express();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cors());
 
 const Users=require('./models/Users');
 const Conversations = require('./models/Conversations');
@@ -112,7 +115,7 @@ app.get('/api/conversation/:userId', async(req,res)=>{
         const userId = req.params.userId;
         const conversations = await Conversations.find({members:{$in: [userId]}});
         const conversationUserData = Promise.all(conversations.map(async (conversation) => {
-            const receiverId = conversation.members.find((member) => member!=userId);
+            const receiverId = conversation.members.find((member) => member!==userId);
             const user = await Users.findById(receiverId);
             return {user: {email: user.email,fullnName: user.fullName },conversationId:conversation._id}
         }))
