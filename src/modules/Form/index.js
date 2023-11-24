@@ -16,6 +16,7 @@ const Form = ({
 
     console.log('data :>> ', data);
     const navigate = useNavigate();
+    
 
     const handleSubmit = async(e) => {
         console.log('data: >> ',data);
@@ -27,8 +28,24 @@ const Form = ({
             },
             body : JSON.stringify(data)
         })
-        const resData = await res.json()
-        console.log('data :>> ', resData);
+
+        if(res.status==400)
+        {
+            alert('Invalid Credentials');
+        }
+        else
+        {
+            const resData = await res.json()
+            if(resData.token)
+            {
+                localStorage.setItem('user:token',resData.token)
+                localStorage.setItem('user:detail',JSON.stringify(resData.user))
+                navigate('/');
+            }
+
+        }
+        
+        
     }
 
   return (
